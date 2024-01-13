@@ -18,9 +18,12 @@ public class Magnet : MonoBehaviour
         item.AttachToMagnet(this.transform);
     }
 
-    public void Detach()
+    public Item Detach()
     {
         this.item.magnet = null;
+        Item ret = this.item;
         this.item = null;
+
+        return ret;
     }
 }

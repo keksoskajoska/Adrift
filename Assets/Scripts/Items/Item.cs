@@ -20,19 +20,19 @@ public class Item : MonoBehaviour
         this.transform.localPosition = Vector3.zero;
         this.transform.localRotation = Quaternion.identity;
 
-        SetLayerToItem();
+        //SetLayerToItem();
     }
 
     public void AttachToMagnet(Transform magnet)
     {
         _rb.isKinematic = true;
-        _col.enabled = true;
+        _col.enabled = false;
 
         this.transform.parent = magnet;
         this.transform.localPosition = Vector3.zero;
         this.transform.localRotation = Quaternion.identity;
 
-        SetLayerToMagnet();
+        //SetLayerToMagnet();
     }
 
     public void Drop()
@@ -40,6 +40,7 @@ public class Item : MonoBehaviour
         _rb.isKinematic = false;
         _col.enabled = true;
 
+        this.transform.position = this.transform.position + this.transform.forward * 0.3f;
         this.transform.parent = null;
 
         SetLayerToItem();

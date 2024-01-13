@@ -15,19 +15,10 @@ public class ItemHandler : MonoBehaviour
 
     private void Update()
     {
-        // DROP
-        Item inHandItem = _inHand != null ? _inHand.GetComponentInParent<Item>() : null;
-        if (Input.GetKeyUp(KeyCode.G) && _inHand)
-        {
-            _inHand = null;
-            inHandItem.Drop();
-        }
-
-
-        // PICKUP
+        // LOOKING AT
         RaycastHit hit;
         Ray ray = new Ray(_cameraTransform.position, _cameraTransform.forward);
-        if(Physics.Raycast(ray, out hit, _reachDistance, _layerMask))
+        if (Physics.Raycast(ray, out hit, _reachDistance, _layerMask))
         {
             _lookingAt = hit.collider.transform;
         }
@@ -36,31 +27,91 @@ public class ItemHandler : MonoBehaviour
             _lookingAt = null;
         }
 
-        if(!_lookingAt)
+        // INPUT HANDLING
+        if (Input.GetKeyUp(KeyCode.G))
         {
-            return;
-        }
-
-        Item lookingAtItem = _lookingAt.GetComponentInParent<Item>();
-        if (lookingAtItem && lookingAtItem.Pickable && Input.GetKeyUp(KeyCode.E))
-        {
-            _inHand = _lookingAt;
-
-            if(lookingAtItem.magnet)
+            Magnet magnet = _lookingAt != null ? _lookingAt.GetComponentInParent<Magnet>() : null;
+            if(magnet)
             {
-                lookingAtItem.magnet.Detach();
+                DropFromMagnet(magnet);
             }
+            else
+            {
+                DropItem();
+            }
+        }
+        else if(Input.GetKeyUp(KeyCode.E) && _lookingAt)
+        {
+            Magnet magnet = _lookingAt.GetComponentInParent<Magnet>();
+            Item lookingAtItem = _lookingAt.GetComponentInParent<Item>();
+            if (lookingAtItem != null)
+            {
+                PickupItem(lookingAtItem);
+            }
+            else if(magnet != null)
+            {
+                InteractWithMagnet(magnet);
+            }
+        }
+    }
+
+    private void DropItem()
+    {
+        if(_inHand)
+        {
+            Item item = _inHand.GetComponentInParent<Item>();
+            item.Drop();
+            _inHand = null;
+        }    
+    }
+    
+    private void DropFromMagnet(Magnet magnet)
+    {
+        if(magnet.InUse())
+        {
+            Item item = magnet.Detach();
+            item.Drop();
+        }
+    }
+
+    private void PickupItem(Item lookingAtItem)
+    {
+        if (lookingAtItem.Pickable)
+        {
+            // If player already has an item in their hand, drop that
+            Item inHandItem = _inHand != null ? _inHand.GetComponentInParent<Item>() : null;
+            if(inHandItem)
+            {
+                inHandItem.Drop();
+            }
+
+            _inHand = lookingAtItem.transform.GetChild(0);
 
             lookingAtItem.Pickup(_handTransform);
 
             return;
         }
+    }
 
-        Magnet magnet = _lookingAt.GetComponentInParent<Magnet>();
-        if(_inHand && magnet && !magnet.InUse() && Input.GetKeyUp(KeyCode.E))
+    private void InteractWithMagnet(Magnet magnet)
+    {
+        Item inHandItem = _inHand != null ? _inHand.GetComponentInParent<Item>() : null;
+        Item onMag = null;
+
+        if(magnet.InUse())
+        {
+            onMag = magnet.Detach();
+        }
+
+        if(inHandItem)
         {
             magnet.Attach(inHandItem);
             _inHand = null;
+        }
+
+        if(onMag)
+        {
+            PickupItem(onMag);
         }
     }
 }

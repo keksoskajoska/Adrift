@@ -7,6 +7,7 @@ public class DefaultFPSMovement : MonoBehaviour
     [SerializeField] private Vector2 _inputDirection;
     private Vector3 _movementForce;
     [SerializeField] private float _movementSpeed = 1.0f;
+    [SerializeField] private float _acceleration = 10.0f;
     [SerializeField] private Rigidbody _rb;
 
     [SerializeField] private CameraController _cameraController;
@@ -17,7 +18,7 @@ public class DefaultFPSMovement : MonoBehaviour
         _inputDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         float CameraYrotation = _cameraController.transform.localEulerAngles.y;
 
-        _movementForce = new Vector3(_inputDirection.x, 0.0f, _inputDirection.y) * _movementSpeed;
+        _movementForce = new Vector3(_inputDirection.x, 0.0f, _inputDirection.y) * _acceleration;
 
         _movementForce = Quaternion.AngleAxis(CameraYrotation, Vector3.up) * _movementForce;
 
@@ -39,6 +40,20 @@ public class DefaultFPSMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _rb.AddForce(_movementForce);
+        Debug.Log(_rb.velocity.magnitude);
+        if(_rb.velocity.magnitude >= _movementSpeed)
+        {
+            return;
+        }
+
+        if(_movementForce.magnitude > 0)
+        {
+            _rb.AddForce(_movementForce);
+        }
+        else
+        {
+            Vector3 stoppingDir = _rb.velocity.normalized * _acceleration * -1;
+            //_rb.AddForce(stoppingDir);
+        }
     }
 }
