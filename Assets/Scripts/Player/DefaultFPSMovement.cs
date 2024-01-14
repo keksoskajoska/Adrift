@@ -40,7 +40,6 @@ public class DefaultFPSMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(_rb.velocity.magnitude);
         if(_rb.velocity.magnitude >= _movementSpeed)
         {
             return;

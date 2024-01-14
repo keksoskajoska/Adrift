@@ -9,9 +9,10 @@ public class Item : MonoBehaviour
 
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private Collider _col;
-    public Magnet magnet;
+    public Magnet OnMagnet;
+    [SerializeField] protected bool _equipped = false;
 
-    public void Pickup(Transform hand)
+    public virtual void Pickup(Transform hand)
     {
         _rb.isKinematic = true;
         _col.enabled = false;
@@ -20,10 +21,10 @@ public class Item : MonoBehaviour
         this.transform.localPosition = Vector3.zero;
         this.transform.localRotation = Quaternion.identity;
 
-        //SetLayerToItem();
+        _equipped = true;
     }
 
-    public void AttachToMagnet(Transform magnet)
+    public virtual void AttachToMagnet(Transform magnet)
     {
         _rb.isKinematic = true;
         _col.enabled = false;
@@ -32,10 +33,10 @@ public class Item : MonoBehaviour
         this.transform.localPosition = Vector3.zero;
         this.transform.localRotation = Quaternion.identity;
 
-        //SetLayerToMagnet();
+        _equipped = false;
     }
 
-    public void Drop()
+    public virtual void Drop()
     {
         _rb.isKinematic = false;
         _col.enabled = true;
@@ -43,16 +44,11 @@ public class Item : MonoBehaviour
         this.transform.position = this.transform.position + this.transform.forward * 0.3f;
         this.transform.parent = null;
 
-        SetLayerToItem();
+        _equipped = false;
     }
 
-    private void SetLayerToMagnet()
+    public virtual void Use()
     {
-        _col.gameObject.layer = LayerMask.NameToLayer("Magnet");
-    }
 
-    private void SetLayerToItem()
-    {
-        _col.gameObject.layer = LayerMask.NameToLayer("Item");
     }
 }

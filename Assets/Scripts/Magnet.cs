@@ -14,13 +14,13 @@ public class Magnet : MonoBehaviour
     public void Attach(Item item)
     {
         this.item = item;
-        item.magnet = this;
+        item.OnMagnet = this;
         item.AttachToMagnet(this.transform);
     }
 
     public Item Detach()
     {
-        this.item.magnet = null;
+        this.item.OnMagnet = null;
         Item ret = this.item;
         this.item = null;
 

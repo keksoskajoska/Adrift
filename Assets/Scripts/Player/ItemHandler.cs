@@ -53,6 +53,12 @@ public class ItemHandler : MonoBehaviour
                 InteractWithMagnet(magnet);
             }
         }
+        else if(Input.GetButtonUp("Mouse0") && _inHand)
+        {
+            Item inHadItem = _inHand.GetComponentInParent<Item>();
+
+            inHadItem.Use();
+        }
     }
 
     private void DropItem()
