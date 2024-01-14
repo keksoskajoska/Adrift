@@ -11,6 +11,12 @@ public class Magnet : MonoBehaviour
         return item != null;
     }
 
+    public bool InUse(out Item reference)
+    {
+        reference = item;
+        return item != null;
+    }
+
     public void Attach(Item item)
     {
         this.item = item;

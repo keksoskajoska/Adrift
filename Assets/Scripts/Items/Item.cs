@@ -6,6 +6,7 @@ using UnityEngine.XR;
 public class Item : MonoBehaviour
 {
     public bool Pickable = true;
+    public string Name = "";
 
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private Collider _col;
