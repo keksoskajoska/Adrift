@@ -1841,6 +1841,11 @@ PrefabInstance:
       propertyPath: _camera
       value: 
       objectReference: {fileID: 1073735772}
+    - target: {fileID: 6681942639492542042, guid: 43fd0b1023265f242a7b9cc1599714d6,
+        type: 3}
+      propertyPath: _mouseSensitivity
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 7364498923377214900, guid: 43fd0b1023265f242a7b9cc1599714d6,
         type: 3}
       propertyPath: _handTransform

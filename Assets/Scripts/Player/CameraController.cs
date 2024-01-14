@@ -16,14 +16,15 @@ public class CameraController : MonoBehaviour
         _mouseInput = Vector2.zero;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        _camera.position = _cameraTargetTransform.position;
+        //_camera.position = _cameraTargetTransform.position;
+        _camera.position = this.transform.position;
 
         int invertMul = _invertMouseY ? 1 : -1;
 
-        _mouseInput.x += Input.GetAxis("Mouse X") * _mouseSensitivity;
-        _mouseInput.y += Input.GetAxis("Mouse Y") * _mouseSensitivity * invertMul;
+        _mouseInput.x += Input.GetAxis("Mouse X") * _mouseSensitivity * Time.deltaTime;
+        _mouseInput.y += Input.GetAxis("Mouse Y") * _mouseSensitivity * invertMul * Time.deltaTime;
 
         _mouseInput.x %= 360.0f;
 
@@ -38,7 +39,12 @@ public class CameraController : MonoBehaviour
 
         Quaternion rotation = Quaternion.Euler(_mouseInput.y, _mouseInput.x, 0.0f);
 
+        /*
         this.transform.localRotation = rotation;
         _camera.localRotation = rotation;
+        */
+
+        this.transform.rotation = rotation;
+        _camera.rotation = rotation;
     }
 }
