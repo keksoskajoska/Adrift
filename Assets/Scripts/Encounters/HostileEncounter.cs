@@ -7,7 +7,8 @@ public class HostileEncounter : Encounter
 
     private void Awake()
     {
-        encounterType = "hostile";
+        encounterType = 'H';
+        encounterStreak = 0;
     }
 
     // Start is called before the first frame update

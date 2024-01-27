@@ -6,7 +6,8 @@ public class StartEncounter : Encounter
 {
     private void Awake()
     {
-        encounterType = "start";
+        encounterType = 'S';
+        encounterStreak = 0;
     }
 
     // Start is called before the first frame update

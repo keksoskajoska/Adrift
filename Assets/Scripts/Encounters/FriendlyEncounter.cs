@@ -7,7 +7,8 @@ public class FriendlyEncounter : Encounter
 
     private void Awake()
     {
-        encounterType = "friendly";
+        encounterType = 'F';
+        encounterStreak = 0;
     }
 
     // Start is called before the first frame update

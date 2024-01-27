@@ -6,12 +6,21 @@ public class EncounterGraphGeneratorSettings : MonoBehaviour
 {
     private static EncounterGraphGeneratorSettings _instance;
     [SerializeField] private int _deph;
+    [SerializeField] private int _difficulty;
+    [SerializeField] private int _graphSideConnectChane;
 
     public int Deph
     {
         get { return _deph; }
     }
-
+    public int Difficulty
+    {
+        get { return _difficulty; }
+    }
+    public int GraphSideConnectionChance
+    {
+        get { return _graphSideConnectChane; }
+    }
     public static EncounterGraphGeneratorSettings Instance
     {
         get

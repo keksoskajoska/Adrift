@@ -6,7 +6,8 @@ public class NeutralEncounter : Encounter
 {
     private void Awake()
     {
-        encounterType = "neutral";
+        encounterType = 'N';
+        encounterStreak = 0;
     }
 
     // Start is called before the first frame update

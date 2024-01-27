@@ -2,20 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Encounter : MonoBehaviour
+public class Encounter
 {
     protected List<Encounter> connections = new List<Encounter>();
-    protected string encounterType;
+    protected char encounterType;
     protected List<string> possibleEncounters = new List<string>();
     protected string encounter;
+    protected int encounterStreak = 0;
     public int encounterNumber;
 
     public void AddConnection(Encounter e)
     {
         connections.Add(e);
     }
-
-
+    public char EncounterType
+    {
+        get { return encounterType; }
+        set
+        {
+            encounterType = value;
+        }
+    }
+    public int EncounterStreak
+    {
+        get { return encounterStreak; }
+    }
+    public void OnAStreak() // oh im on a roll -Alestor (hazbin hotel pilot)
+    {
+        encounterStreak++;
+    }
 
     // Start is called before the first frame update
     void Start()
