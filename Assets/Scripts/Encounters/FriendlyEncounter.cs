@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FriendlyEncounter : Encounter
 {
-
     public FriendlyEncounter()
     {
         encounterType = 'F';

@@ -11,10 +11,6 @@ public class Encounter
     protected int encounterStreak = 0;
     public int encounterNumber;
 
-    public void AddConnection(Encounter e)
-    {
-        connections.Add(e);
-    }
     public char EncounterType
     {
         get { return encounterType; }
@@ -27,20 +23,14 @@ public class Encounter
     {
         get { return encounterStreak; }
     }
-    public void OnAStreak() // oh im on a roll -Alestor (hazbin hotel pilot)
+
+    public void AddConnection(Encounter e)
+    {
+        connections.Add(e);
+    }
+
+    public void OnAStreak() // oh im on a roll
     {
         encounterStreak++;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -14,9 +14,7 @@ public class EncounterGraphGenerator : MonoBehaviour
     private void Awake()
     {
         _deph = EncounterGraphGeneratorSettings.Instance.Deph;
-        //_startEncounter.encounterNumber = 0;
-        //_startEncounter.EncounterType = 'S';
-        _encounters = new List<Encounter>[_deph+1];
+        _encounters = new List<Encounter>[_deph + 1];
     }
 
     void Start()
@@ -24,26 +22,8 @@ public class EncounterGraphGenerator : MonoBehaviour
         _encounterGraphGenerator(0, _startEncounter);
     }
 
-    private void _encounterGraphGenerator(int deph,Encounter previousEncounter)
+    private void _encounterGraphGenerator(int deph, Encounter previousEncounter)
     {
-        //Debug.Log(previousEncounter);
-
-        //if (previousEncounter == null)
-        //{
-        //  previousEncounter = new StartEncounter();
-        //}
-        //array[_encounterNumbers] = previousEncounter;
-
-
-        //lista2[_deph].Add(previousEncounter);
-
-        //lista.Add(previousEncounter);
-
-        //_encounters[deph] = 
-
-
-
-        //_encounters[deph].Add(previousEncounter);      //fa oldalra kötés
         if (_encounters[deph] != null)
         {
             if (_encounters[deph].Count > 0)
@@ -53,11 +33,10 @@ public class EncounterGraphGenerator : MonoBehaviour
                     Encounter e = _encounters[deph][rnd.Next(0, _encounters[deph].Count)];
                     e.AddConnection(previousEncounter);
                     previousEncounter.AddConnection(e);
-                    Debug.Log("side: "+previousEncounter.EncounterType + " " + previousEncounter.encounterNumber + " coneccted with " + e.EncounterType + " " + e.encounterNumber);
+                    Debug.Log("side: " + previousEncounter.EncounterType + " " + previousEncounter.encounterNumber + " coneccted with " + e.EncounterType + " " + e.encounterNumber);
                 }
             }
         }
-        
 
         if (_encounters[deph] == null)
         {
@@ -66,17 +45,16 @@ public class EncounterGraphGenerator : MonoBehaviour
         }
         _encounters[deph].Add(previousEncounter);
 
-        //Debug.Log(deph);
         if (deph >= _deph)
         {
             return;
         }
 
-        int childCount = rnd.Next(1,4);
+        int childCount = rnd.Next(1, 4);
 
         for (int i = 0; i < childCount; i++)
         {
-            Encounter e = _encounterTypeSelector(deph,previousEncounter.EncounterType,previousEncounter.EncounterStreak);
+            Encounter e = _encounterTypeSelector(deph, previousEncounter.EncounterType, previousEncounter.EncounterStreak);
             e.encounterNumber = _encounterNumbers;
             _encounterNumbers++;
             if (e.EncounterType == previousEncounter.EncounterType)
@@ -85,55 +63,40 @@ public class EncounterGraphGenerator : MonoBehaviour
             }
             previousEncounter.AddConnection(e);
             e.AddConnection(previousEncounter);
-            //Debug.Log( previousEncounter.encounterNumber + " coneccted with " + e.encounterNumber);
-            //Debug.Log(previousEncounter.EncounterType.ToString() + "    "+ e.EncounterType.ToString());
-
             Debug.Log(previousEncounter.EncounterType + " " + previousEncounter.encounterNumber + " coneccted with " + e.EncounterType + " " + e.encounterNumber);
-
-
-            _encounterGraphGenerator(deph+1,e);
+            _encounterGraphGenerator(deph + 1, e);
         }
-        return;
     }
 
-    private Encounter _encounterTypeSelector(int deph, char parentEncounterType,int parentEncounterStreak)
+    private Encounter _encounterTypeSelector(int deph, char parentEncounterType, int parentEncounterStreak)
     {
         int difficulty = EncounterGraphGeneratorSettings.Instance.Difficulty;
         int rndMax;
         int rndMin;
         Encounter e;
 
-        int dephDifficultyIndex = deph * ((difficulty / 10)+1);
-        rndMin = -500 + dephDifficultyIndex+deph*10+difficulty*10;
-        rndMax = dephDifficultyIndex > 10 ? rndMin+deph*10 : rndMin+60;
-        Debug.Log(rndMin);
-        Debug.Log(rndMax);
-
-
-
-
+        int dephDifficultyIndex = deph * ((difficulty / 10) + 1);
+        rndMin = -500 + dephDifficultyIndex + deph * 10 + difficulty * 10;
+        rndMax = dephDifficultyIndex > 10 ? rndMin + deph * 10 : rndMin + 60;
 
         switch (parentEncounterType)
         {
             case 'F':
                 if (deph + (difficulty / 10) > 10)
                 {
-                    rndMin += (difficulty/5) * (parentEncounterStreak+1);
+                    rndMin += (difficulty / 5) * (parentEncounterStreak + 1);
                 }
                 break;
+
             case 'N':
-
-                
-                
-                    rndMax += 10 * (parentEncounterStreak+1);
-                    rndMin -= 10 * (parentEncounterStreak+1);
-                
-
+                rndMax += 10 * (parentEncounterStreak + 1);
+                rndMin -= 10 * (parentEncounterStreak + 1);
                 break;
+
             case 'H':
-                if (deph+(difficulty/10) > 10)
+                if (deph + (difficulty / 10) > 10)
                 {
-                    rndMax -= 10 * (parentEncounterStreak+1);
+                    rndMax -= 10 * (parentEncounterStreak + 1);
                 }
                 else
                 {
@@ -146,25 +109,18 @@ public class EncounterGraphGenerator : MonoBehaviour
                 break;
         }
 
-
-        Debug.Log(rndMin);
-        Debug.Log(rndMax);
-
-
-        //const int HOSTILECHANCE = 33;
         int chance = rnd.Next(rndMin, ++rndMax);
         switch (chance)
         {
-            case <40:
+            case < 40:
                 e = new FriendlyEncounter();
                 return e;
-            case <80:
+            case < 80:
                 e = new NeutralEncounter();
                 return e;
             default:
                 e = new HostileEncounter();
                 return e;
-                
         }
     }
 }
