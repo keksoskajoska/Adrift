@@ -5,21 +5,9 @@ using UnityEngine;
 public class FriendlyEncounter : Encounter
 {
 
-    private void Awake()
+    public FriendlyEncounter()
     {
         encounterType = 'F';
         encounterStreak = 0;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

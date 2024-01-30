@@ -8,14 +8,20 @@ public class EncounterGraphGenerator : MonoBehaviour
     private static System.Random rnd = new System.Random();
     private int _deph;
     private StartEncounter _startEncounter = new StartEncounter();
-    private static int _encounterNumbers = 1;
-    private static List<Encounter>[] _encounters;
+    private int _encounterNumbers = 1;
+    private List<Encounter>[] _encounters;
 
     private void Awake()
     {
         _deph = EncounterGraphGeneratorSettings.Instance.Deph;
-        _startEncounter.encounterNumber = 0;
-        _encounters = new List<Encounter>[_deph];
+        //_startEncounter.encounterNumber = 0;
+        //_startEncounter.EncounterType = 'S';
+        _encounters = new List<Encounter>[_deph+1];
+    }
+
+    void Start()
+    {
+        _encounterGraphGenerator(0, _startEncounter);
     }
 
     private void _encounterGraphGenerator(int deph,Encounter previousEncounter)
@@ -24,23 +30,42 @@ public class EncounterGraphGenerator : MonoBehaviour
 
         //if (previousEncounter == null)
         //{
-          //  previousEncounter = new StartEncounter();
+        //  previousEncounter = new StartEncounter();
         //}
+        //array[_encounterNumbers] = previousEncounter;
 
-        /*_encounters[deph].Add(previousEncounter);      //fa oldalra kötés
 
-        if (_encounters[deph].Count > 0)
+        //lista2[_deph].Add(previousEncounter);
+
+        //lista.Add(previousEncounter);
+
+        //_encounters[deph] = 
+
+
+
+        //_encounters[deph].Add(previousEncounter);      //fa oldalra kötés
+        if (_encounters[deph] != null)
         {
-            if (EncounterGraphGeneratorSettings.Instance.GraphSideConnectionChance >= rnd.Next(0, 101))
+            if (_encounters[deph].Count > 0)
             {
-                Encounter e = _encounters[deph][rnd.Next(0, _encounters[deph].Count)];
-                e.AddConnection(previousEncounter);
-                previousEncounter.AddConnection(e);
-                Debug.Log(previousEncounter.EncounterType+" "+previousEncounter.encounterNumber + " coneccted with "+ e.EncounterType + " " + e.encounterNumber);
+                if (EncounterGraphGeneratorSettings.Instance.GraphSideConnectionChance >= rnd.Next(0, 101))
+                {
+                    Encounter e = _encounters[deph][rnd.Next(0, _encounters[deph].Count)];
+                    e.AddConnection(previousEncounter);
+                    previousEncounter.AddConnection(e);
+                    Debug.Log("side: "+previousEncounter.EncounterType + " " + previousEncounter.encounterNumber + " coneccted with " + e.EncounterType + " " + e.encounterNumber);
+                }
             }
         }
+        
+
+        if (_encounters[deph] == null)
+        {
+            _encounters[deph] = new List<Encounter>();
+            Debug.Log(deph);
+        }
         _encounters[deph].Add(previousEncounter);
-        */
+
         //Debug.Log(deph);
         if (deph >= _deph)
         {
@@ -60,10 +85,13 @@ public class EncounterGraphGenerator : MonoBehaviour
             }
             previousEncounter.AddConnection(e);
             e.AddConnection(previousEncounter);
-            Debug.Log( previousEncounter.encounterNumber + " coneccted with " + e.encounterNumber);
-            Debug.Log(previousEncounter.EncounterType.ToString() + "    "+ e.EncounterType.ToString());
-  
-        _encounterGraphGenerator(deph+1,e);
+            //Debug.Log( previousEncounter.encounterNumber + " coneccted with " + e.encounterNumber);
+            //Debug.Log(previousEncounter.EncounterType.ToString() + "    "+ e.EncounterType.ToString());
+
+            Debug.Log(previousEncounter.EncounterType + " " + previousEncounter.encounterNumber + " coneccted with " + e.EncounterType + " " + e.encounterNumber);
+
+
+            _encounterGraphGenerator(deph+1,e);
         }
         return;
     }
@@ -129,30 +157,14 @@ public class EncounterGraphGenerator : MonoBehaviour
         {
             case <40:
                 e = new FriendlyEncounter();
-                e.EncounterType = 'F';
                 return e;
             case <80:
                 e = new NeutralEncounter();
-                e.EncounterType = 'N';
                 return e;
             default:
                 e = new HostileEncounter();
-                e.EncounterType = 'H';
                 return e;
                 
         }
-    }
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        _encounterGraphGenerator(0,_startEncounter);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
