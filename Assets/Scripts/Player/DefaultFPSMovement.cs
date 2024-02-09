@@ -16,7 +16,7 @@ public class DefaultFPSMovement : MonoBehaviour
     private void Update()
     {
         _inputDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        float CameraYrotation = _cameraController.transform.localEulerAngles.y;
+        float CameraYrotation = _cameraController.transform.eulerAngles.y;
 
         _movementForce = new Vector3(_inputDirection.x, 0.0f, _inputDirection.y) * _acceleration;
 
@@ -28,19 +28,25 @@ public class DefaultFPSMovement : MonoBehaviour
             return;
         }
 
-        float transformY = this.transform.localEulerAngles.y;
+        float transformY = this.transform.eulerAngles.y;
 
         Quaternion ownRot = Quaternion.Euler(0.0f, transformY, 0.0f);
         Quaternion targetRot = Quaternion.Euler(0.0f, CameraYrotation, 0.0f);
 
         Quaternion rotation = Quaternion.Lerp(ownRot, targetRot, _bodyRotationSpeed);
 
-        this.transform.localRotation = rotation;
+        if(Quaternion.Angle(rotation, targetRot) < 1f)
+        {
+            rotation = targetRot;
+        }
+
+        this.transform.rotation = rotation;
     }
 
     private void FixedUpdate()
     {
-        Debug.Log(_rb.velocity.magnitude);
+        _rb.velocity = _movementForce;
+        /*
         if(_rb.velocity.magnitude >= _movementSpeed)
         {
             return;
@@ -55,5 +61,6 @@ public class DefaultFPSMovement : MonoBehaviour
             Vector3 stoppingDir = _rb.velocity.normalized * _acceleration * -1;
             //_rb.AddForce(stoppingDir);
         }
+        */
     }
 }
