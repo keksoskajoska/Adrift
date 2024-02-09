@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ItemHandler : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private HUDController _hudController;
+
     [SerializeField] private Transform _cameraTransform;
     [SerializeField] private Transform _handTransform;
     [SerializeField] private Transform _lookingAt;
@@ -26,6 +29,7 @@ public class ItemHandler : MonoBehaviour
         {
             _lookingAt = null;
         }
+        UpdateHud();
 
         // INPUT HANDLING
         if (Input.GetKeyUp(KeyCode.G))
@@ -52,6 +56,12 @@ public class ItemHandler : MonoBehaviour
             {
                 InteractWithMagnet(magnet);
             }
+        }
+        else if(Input.GetKeyUp(KeyCode.Mouse0) && _inHand)
+        {
+            Item inHadItem = _inHand.GetComponentInParent<Item>();
+
+            inHadItem.Use();
         }
     }
 
@@ -112,6 +122,59 @@ public class ItemHandler : MonoBehaviour
         if(onMag)
         {
             PickupItem(onMag);
+        }
+    }
+
+    private void UpdateHud()
+    {
+        Item _lookingAtItem = _lookingAt != null ? _lookingAt.GetComponentInParent<Item>() : null;
+        Item _inHandItem = _inHand != null ? _inHand.GetComponentInParent<Item>() : null;
+        Magnet _lookingAtMagnet = _lookingAt != null ? _lookingAt.GetComponentInParent<Magnet>() : null;
+        Item _magnetItem = null;
+        if(_lookingAtMagnet != null)
+        {
+            _lookingAtMagnet.InUse(out _magnetItem);
+        }
+
+        // Hand states:
+        // Item in hand, looking at item
+        // Item in hand, looking at nothing
+        // Item in hand, looking at magnet (empty)
+        // Item in hand, looking at magnet (full)
+        // Nothing in hand, looking at item
+        // Nothing in hand, looking at magnet (full)
+        // Nothing in hand, looking at nothing
+
+
+        if (_lookingAtItem)
+        {
+            _hudController.ChangeHandAction("[E] Pick up");
+            _hudController.ChangeItemName(_lookingAtItem.Name);
+        }
+        else if (_inHandItem && !_lookingAtItem && !_lookingAtMagnet)
+        {
+            _hudController.ChangeHandAction("[G] Drop");
+            _hudController.ChangeItemName(_inHandItem.Name);
+        }
+        else if(_inHandItem && !_magnetItem)
+        {
+            _hudController.ChangeHandAction("[E] Attach to magnet");
+            _hudController.ChangeItemName(_inHandItem.Name);
+        }
+        else if(_inHandItem && _magnetItem)
+        {
+            _hudController.ChangeHandAction("[E] Change item on magnet");
+            _hudController.ChangeItemName(_inHandItem.Name);
+        }
+        else if(!_inHandItem && _lookingAtMagnet && _magnetItem)
+        {
+            _hudController.ChangeHandAction("[E] Pick up\n[G] Detach from magnet");
+            _hudController.ChangeItemName(_magnetItem.Name);
+        }
+        else
+        {
+            _hudController.ChangeItemName("");
+            _hudController.ChangeHandAction("");
         }
     }
 }
