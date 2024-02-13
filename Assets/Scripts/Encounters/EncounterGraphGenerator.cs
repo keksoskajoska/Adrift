@@ -7,18 +7,21 @@ public class EncounterGraphGenerator : MonoBehaviour
 {
     private static System.Random rnd = new System.Random();
     private int _deph;
-    private StartEncounter _startEncounter = new StartEncounter();
+    private StartEncounter _startEncounter;
     private int _encounterNumbers = 1;
     private List<Encounter>[] _encounters;
 
     private void Awake()
     {
-        _deph = EncounterGraphGeneratorSettings.Instance.Deph;
-        _encounters = new List<Encounter>[_deph + 1];
+        
+       
     }
 
     void Start()
     {
+        _deph = EncounterGraphGeneratorSettings.Instance.Deph;
+        _encounters = new List<Encounter>[_deph + 1];
+        _startEncounter = EncounterGraphGeneratorSettings.Instance.StartEncounter;
         _encounterGraphGenerator(0, _startEncounter);
     }
 
@@ -76,7 +79,7 @@ public class EncounterGraphGenerator : MonoBehaviour
         Encounter e;
 
         int dephDifficultyIndex = deph * ((difficulty / 10) + 1);
-        rndMin = -500 + dephDifficultyIndex + deph * 10 + difficulty * 10;
+        rndMin = dephDifficultyIndex + deph * 10; //+ difficulty * 10;
         rndMax = dephDifficultyIndex > 10 ? rndMin + deph * 10 : rndMin + 60;
 
         switch (parentEncounterType)
@@ -85,6 +88,7 @@ public class EncounterGraphGenerator : MonoBehaviour
                 if (deph + (difficulty / 10) > 10)
                 {
                     rndMin += (difficulty / 5) * (parentEncounterStreak + 1);
+                    rndMax += (difficulty / 5) * (parentEncounterStreak + 1);
                 }
                 break;
 
@@ -97,6 +101,7 @@ public class EncounterGraphGenerator : MonoBehaviour
                 if (deph + (difficulty / 10) > 10)
                 {
                     rndMax -= 10 * (parentEncounterStreak + 1);
+                    rndMin -= 10 * (parentEncounterStreak + 1);
                 }
                 else
                 {
@@ -108,6 +113,10 @@ public class EncounterGraphGenerator : MonoBehaviour
             default:
                 break;
         }
+
+        Debug.Log(rndMin);
+        Debug.Log(rndMax);
+
 
         int chance = rnd.Next(rndMin, ++rndMax);
         switch (chance)

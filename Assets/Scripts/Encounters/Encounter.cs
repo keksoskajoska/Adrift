@@ -14,10 +14,10 @@ public class Encounter
     public char EncounterType
     {
         get { return encounterType; }
-        set
-        {
-            encounterType = value;
-        }
+    }
+    public List<Encounter> Connections
+    {
+        get { return connections; }
     }
     public int EncounterStreak
     {

@@ -8,7 +8,12 @@ public class EncounterGraphGeneratorSettings : MonoBehaviour
     [SerializeField] private int _deph;
     [SerializeField] private int _difficulty;
     [SerializeField] private int _graphSideConnectChane;
+    private StartEncounter _startEncounter = new StartEncounter();
 
+    public StartEncounter StartEncounter
+    {
+        get { return _startEncounter; }
+    }
     public int Deph
     {
         get { return _deph; }
